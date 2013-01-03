@@ -23,4 +23,38 @@ def is_board_full(board):
             if board[i][j] == EMPTY:
                 return False
     return True
+
+def get_lowest_empty_space(board, column):
+    for y in range(BOARD_HEIGHT-1, -1, -1):
+        if board[column][y] == EMPTY:
+            return y
+    return -1
     
+
+def is_valid_mode(board, column):
+    if column < 0 or column >= BOARD_WIDTH or board[column][0] != EMPTY:
+        return False
+    return True
+    
+def is_winner(board, tile):
+    # check horizontal spaces
+    for x in range(BOARD_WIDTH - 3):
+        for y in range(BOARD_HEIGHT):
+            if board[x][y] == tile and board[x+1][y] == tile and board[x+2][y] == tile and board[x+3][y] == tile:
+                return True
+    # check vertical spaces
+    for x in range(BOARD_WIDTH):
+        for y in range(BOARD_HEIGHT - 3):
+            if board[x][y] == tile and board[x][y+1] == tile and board[x][y+2] == tile and board[x][y+3] == tile:
+                return True
+    # check / diagonal spaces
+    for x in range(BOARD_WIDTH - 3):
+        for y in range(3, BOARD_HEIGHT):
+            if board[x][y] == tile and board[x+1][y-1] == tile and board[x+2][y-2] == tile and board[x+3][y-3] == tile:
+                return True
+    # check \ diagonal spaces
+    for x in range(BOARD_WIDTH - 3):
+        for y in range(BOARD_HEIGHT - 3):
+            if board[x][y] == tile and board[x+1][y+1] == tile and board[x+2][y+2] == tile and board[x+3][y+3] == tile:
+                return True
+    return False
