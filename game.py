@@ -7,7 +7,6 @@ from functions import *
 from pygame.locals import *
 
 def main():
-    #init_global_vars()
     global FPSCLOCK, DISPLAYSURF, REDPILERECT, BLACKPILERECT, REDTOKENIMG
     global BLACKTOKENIMG, BOARDIMG, ARROWIMG, ARROWRECT, HUMANWINNERIMG
     global COMPUTERWINNERIMG, WINNERRECT, TIEWINNERIMG
@@ -27,18 +26,23 @@ def main():
 
     
     # TODO loading winner images
-    board = new_board()
+
     while True:
-        draw_board(board)
+        run()
     
 
 def run():
-    turn = get_random_player()
+    #turn = get_random_player()
+    turn = HUMAN
     board = new_board()
     
     while True:
         if turn == HUMAN:
-            pass
+            get_human_move(board)
+            if isWinner(mainBoard, RED):
+                winnerImg = HUMANWINNERIMG
+                break
+            turn = COMPUTER
         else:
             pass
         if is_board_full(board):
@@ -72,6 +76,40 @@ def draw_board(board, extra_pars=None):
     
     DISPLAYSURF.blit(REDTOKENIMG, REDPILERECT) # red on the left
     DISPLAYSURF.blit(BLACKTOKENIMG, BLACKPILERECT) # black on the right
+    
+def get_human_move(board):
+    draggingToken = False
+    tokenx, tokeny = None, None
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == MOUSEBUTTONDOWN and not draggingToken and REDPILERECT.collidepoint(event.pos):
+                draggingToken = True
+                tokenx, tokeny = event.pos
+            elif event.type == MOUSEMOTION and draggingToken:
+                tokenx, tokeny = event.pos
+            elif event.type == MOUSEBUTTONUP and draggingToken:
+                # let go of the token being dragged
+                if tokeny < Y_DISTANCE and tokenx > X_DISTANCE and tokenx < WINDOW_WIDTH - X_DISTANCE:
+                    # let go at the top of the screen.
+                    column = int((tokenx - X_DISTANCE) / SPACE_SIZE)
+                    if isValidMove(board, column):
+                        animateDroppingToken(board, column, RED)
+                        board[column][getLowestEmptySpace(board, column)] = RED
+                        draw_board(board)
+                        pygame.display.update()
+                        return
+                tokenx, tokeny = None, None
+                draggingToken = False
+        if tokenx != None and tokeny != None:
+            draw_board(board, {'x':tokenx - int(SPACE_SIZE / 2), 'y':tokeny - int(SPACE_SIZE / 2), 'color':RED})
+        else:
+            draw_board(board)
+
+        pygame.display.update()
+        FPSCLOCK.tick()
     
 if __name__ == '__main__':
     main()
