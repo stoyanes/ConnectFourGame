@@ -1,10 +1,7 @@
+import pygame
+from pygame.locals import *
 from constants import *
 
-#def init_global_vars():
-    #global FPSCLOCK, DISPLAYSURF, REDPILERECT, BLACKPILERECT, REDTOKENIMG
-    #global BLACKTOKENIMG, BOARDIMG, ARROWIMG, ARROWRECT, HUMANWINNERIMG
-    #global COMPUTERWINNERIMG, WINNERRECT, TIEWINNERIMG
-    
 def new_board():
     board = []
     for i in range(BOARD_WIDTH):
@@ -58,3 +55,8 @@ def is_winner(board, tile):
             if board[x][y] == tile and board[x+1][y+1] == tile and board[x+2][y+2] == tile and board[x+3][y+3] == tile:
                 return True
     return False
+    
+def initial_game_settings():
+    FPSCLOCK = pygame.time.Clock()
+    DISPLAYSURF = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    pygame.display.set_caption('Connect Four')

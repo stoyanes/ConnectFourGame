@@ -10,10 +10,12 @@ def main():
     global FPSCLOCK, DISPLAYSURF, REDPILERECT, BLACKPILERECT, REDTOKENIMG
     global BLACKTOKENIMG, BOARDIMG, ARROWIMG, ARROWRECT, HUMANWINNERIMG
     global COMPUTERWINNERIMG, WINNERRECT, TIEWINNERIMG
+    #init_global_vars()
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption('Connect Four')
+    #initial_game_settings()
     REDPILERECT = pygame.Rect(int(SPACE_SIZE / 2), WINDOW_HEIGHT - int(3 * SPACE_SIZE / 2), SPACE_SIZE, SPACE_SIZE)
     BLACKPILERECT = pygame.Rect(WINDOW_WIDTH - int(3 * SPACE_SIZE / 2), WINDOW_HEIGHT - int(3 * SPACE_SIZE / 2), SPACE_SIZE, SPACE_SIZE)
     REDTOKENIMG = pygame.image.load('images/red_player.png')
@@ -124,8 +126,8 @@ def animate_dropping_token(board, column, color):
     lowest_empty_space = get_lowest_empty_space(board, column)
 
     while True:
-        y += int(drop_speed)
-        drop_speed += 0.5
+        y = y + int(drop_speed)
+        drop_speed = drop_speed + 0.5
         if int((y - Y_DISTANCE) / SPACE_SIZE) >= lowest_empty_space:
             return
         draw_board(board, {'x':x, 'y':y, 'color':color})
