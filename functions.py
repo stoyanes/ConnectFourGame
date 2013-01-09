@@ -28,7 +28,7 @@ def get_lowest_empty_space(board, column):
     return -1
     
 
-def is_valid_mode(board, column):
+def is_valid_move(board, column):
     if column < 0 or column >= BOARD_WIDTH or board[column][0] != EMPTY:
         return False
     return True
@@ -55,6 +55,11 @@ def is_winner(board, tile):
             if board[x][y] == tile and board[x+1][y+1] == tile and board[x+2][y+2] == tile and board[x+3][y+3] == tile:
                 return True
     return False
+
+def make_move(board, player, column):
+    low = get_lowest_empty_space(board, column)
+    if low != -1:
+        board[column][low] = player
     
 def initial_game_settings():
     FPSCLOCK = pygame.time.Clock()

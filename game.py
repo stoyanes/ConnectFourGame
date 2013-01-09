@@ -42,17 +42,24 @@ def run():
         if turn == HUMAN:
             get_human_move(board)
             if is_winner(board, RED):
-                #TODO to be implemented
-                #winnerImg = HUMANWINNERIMG
-                break
+                pygame.quit()
+                sys.exit()
             turn = COMPUTER
         else:
-            pass
+            #computer's logic here
+            col = get_computer_move(board)
+            animate_computer_moving(board, col)
+            make_move(board, BLACK, col)
+            if is_winner(board, BLACK):
+                #TODO to be implemented
+                #winnerImg = HUMANWINNERIMG
+                break;
+            turn = HUMAN
         if is_board_full(board):
             pass
     while True:
-        #TODO implement the game over logic
-        pass
+        pygame.quit()
+        sys.exit()
        
 def draw_board(board, extra_pars=None):
     DISPLAYSURF.fill(BGCOLOR)
@@ -99,7 +106,7 @@ def get_human_move(board):
                 if tokeny < Y_DISTANCE and tokenx > X_DISTANCE and tokenx < WINDOW_WIDTH - X_DISTANCE:
                     # let go at the top of the screen.
                     column = int((tokenx - X_DISTANCE) / SPACE_SIZE)
-                    if is_valid_mode(board, column):
+                    if is_valid_move(board, column):
                         animate_dropping_token(board, column, RED)
                         board[column][get_lowest_empty_space(board, column)] = RED
                         draw_board(board)
@@ -134,6 +141,74 @@ def animate_dropping_token(board, column, color):
         pygame.display.update()
         FPSCLOCK.tick()
 
+def get_computer_move(board):
+    moves = get_moves(board, BLACK, DIFFICULTY)
     
+    best_move = -1
+    for i in range(0, BOARD_WIDTH):
+        if moves[i] > best_move and is_valid_move(board, i):
+            best_move = moves[i]
+    best_moves = []
+    for i in range(len(moves)):
+        if moves[i] == best_move and is_valid_move(board, i):
+            best_moves.append(i)
+    return random.choice(best_moves)
+    
+def get_moves(board, player, depth):
+    if depth == 0 or is_board_full(board):
+        return [0] * BOARD_WIDTH
+        
+    if player == RED:
+        enemy = BLACK
+    else:
+        enemy = RED
+        
+    moves = [0] * BOARD_WIDTH
+    for move in range(0, BOARD_WIDTH):
+        board_copy = copy.deepcopy(board)
+        if not is_valid_move(board_copy, move):
+            continue
+        if (is_winner(board_copy, player)):
+            moves[move] = 1
+            break
+        else:
+            for counter_move in range(0, BOARD_WIDTH):
+                board_copy_2 = copy.deepcopy(board_copy)
+                if not is_valid_move(board_copy_2, counter_move):
+                    continue
+                if is_winner(board_copy_2, enemy):
+                    moves[move] = -1
+                    break
+                else:
+                    result = get_moves(board_copy_2, player, depth - 1)
+                    moves[move] += (sum(result) / BOARD_WIDTH) / BOARD_WIDTH
+                    
+    return moves
+
+def animate_computer_moving(board, column):
+    x = BLACKPILERECT.left
+    y = BLACKPILERECT.top
+    speed = 1.0
+    # moving the black tile up
+    while y > (Y_DISTANCE - SPACE_SIZE):
+        y -= int(speed)
+        speed += 0.5
+        draw_board(board, {'x':x, 'y':y, 'color':BLACK})
+        pygame.display.update()
+        FPSCLOCK.tick()
+    # moving the black tile over
+    y = Y_DISTANCE - SPACE_SIZE
+    speed = 1.0
+    while x > (X_DISTANCE + column * SPACE_SIZE):
+        x -= int(speed)
+        speed += 0.5
+        draw_board(board, {'x':x, 'y':y, 'color':BLACK})
+        pygame.display.update()
+        FPSCLOCK.tick()
+    # dropping the black tile
+    animate_dropping_token(board, column, BLACK)
+    
+
+
 if __name__ == '__main__':
     main()
