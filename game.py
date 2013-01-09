@@ -36,26 +36,26 @@ def main():
 def run():
     #turn = get_random_player()
     turn = HUMAN
-    board = new_board()
+    main_board = new_board()
     
     while True:
         if turn == HUMAN:
-            get_human_move(board)
-            if is_winner(board, RED):
+            get_human_move(main_board)
+            if is_winner(main_board, RED):
                 pygame.quit()
                 sys.exit()
             turn = COMPUTER
         else:
             #computer's logic here
-            col = get_computer_move(board)
-            animate_computer_moving(board, col)
-            make_move(board, BLACK, col)
-            if is_winner(board, BLACK):
+            col = get_computer_move(main_board)
+            animate_computer_moving(main_board, col)
+            make_move(main_board, BLACK, col)
+            if is_winner(main_board, BLACK):
                 #TODO to be implemented
                 #winnerImg = HUMANWINNERIMG
                 break;
             turn = HUMAN
-        if is_board_full(board):
+        if is_board_full(main_board):
             pass
     while True:
         pygame.quit()
@@ -168,20 +168,25 @@ def get_moves(board, player, depth):
         board_copy = copy.deepcopy(board)
         if not is_valid_move(board_copy, move):
             continue
-        if (is_winner(board_copy, player)):
+        make_move(board_copy, player, move)
+        if is_winner(board_copy, player):
             moves[move] = 1
             break
         else:
-            for counter_move in range(0, BOARD_WIDTH):
-                board_copy_2 = copy.deepcopy(board_copy)
-                if not is_valid_move(board_copy_2, counter_move):
-                    continue
-                if is_winner(board_copy_2, enemy):
-                    moves[move] = -1
-                    break
-                else:
-                    result = get_moves(board_copy_2, player, depth - 1)
-                    moves[move] += (sum(result) / BOARD_WIDTH) / BOARD_WIDTH
+            if is_board_full(board_copy):
+                moves[move] = 0
+            else:
+                for counter_move in range(0, BOARD_WIDTH):
+                    board_copy_2 = copy.deepcopy(board_copy)
+                    if not is_valid_move(board_copy_2, counter_move):
+                        continue
+                    make_move(board_copy_2, enemy, counter_move)
+                    if is_winner(board_copy_2, enemy):
+                        moves[move] = -1
+                        break
+                    else:
+                        result = get_moves(board_copy_2, player, depth - 1)
+                        moves[move] += (sum(result) / BOARD_WIDTH) / BOARD_WIDTH
                     
     return moves
 
@@ -190,12 +195,12 @@ def animate_computer_moving(board, column):
     y = BLACKPILERECT.top
     speed = 1.0
     # moving the black tile up
-    while y > (Y_DISTANCE - SPACE_SIZE):
-        y -= int(speed)
-        speed += 0.5
-        draw_board(board, {'x':x, 'y':y, 'color':BLACK})
-        pygame.display.update()
-        FPSCLOCK.tick()
+    #while y > (Y_DISTANCE - SPACE_SIZE):
+    #    y -= int(speed)
+    #    speed += 0.5
+    #    draw_board(board, {'x':x, 'y':y, 'color':BLACK})
+    #    pygame.display.update()
+    #    FPSCLOCK.tick()
     # moving the black tile over
     y = Y_DISTANCE - SPACE_SIZE
     speed = 1.0
