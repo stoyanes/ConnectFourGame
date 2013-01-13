@@ -7,15 +7,12 @@ from functions import *
 from pygame.locals import *
 
 def main():
-    global FPSCLOCK, DISPLAYSURF, REDPILERECT, BLACKPILERECT, REDTOKENIMG
+    global DISPLAYSURF, REDPILERECT, BLACKPILERECT, REDTOKENIMG
     global BLACKTOKENIMG, BOARDIMG, ARROWIMG, ARROWRECT, HUMANWINNERIMG
     global COMPUTERWINNERIMG, WINNERRECT, TIEWINNERIMG
-    #init_global_vars()
     pygame.init()
-    FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption('Connect Four')
-    #initial_game_settings()
     REDPILERECT = pygame.Rect(int(SPACE_SIZE / 2), WINDOW_HEIGHT - int(3 * SPACE_SIZE / 2), SPACE_SIZE, SPACE_SIZE)
     BLACKPILERECT = pygame.Rect(WINDOW_WIDTH - int(3 * SPACE_SIZE / 2), WINDOW_HEIGHT - int(3 * SPACE_SIZE / 2), SPACE_SIZE, SPACE_SIZE)
     REDTOKENIMG = pygame.image.load('images/red_player.png')
@@ -111,7 +108,6 @@ def get_human_move(board):
                 coord_x, coord_y = None, None
         draw_board(board)
         pygame.display.update()
-        FPSCLOCK.tick()
         
 
 
@@ -129,7 +125,7 @@ def animate_dropping_token(board, column, color):
             return
         draw_board(board, {'x':x, 'y':y, 'color':color})
         pygame.display.update()
-        FPSCLOCK.tick()
+
 
 def get_computer_move(board):
     moves = get_moves(board, BLACK, DIFFICULTY)
@@ -181,21 +177,8 @@ def get_moves(board, player, depth):
     return moves
 
 def animate_computer_moving(board, column):
-    x = BLACKPILERECT.left
-    y = BLACKPILERECT.top
-    speed = 1.0
-    y = Y_DISTANCE - SPACE_SIZE
-    speed = 1.0
-    while x > (X_DISTANCE + column * SPACE_SIZE):
-        x -= int(speed)
-        speed += 0.5
-        draw_board(board, {'x':x, 'y':y, 'color':BLACK})
-        pygame.display.update()
-        FPSCLOCK.tick()
-    # dropping the black tile
     animate_dropping_token(board, column, BLACK)
     
-
 
 if __name__ == '__main__':
     main()

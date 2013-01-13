@@ -77,8 +77,7 @@ def get_start_option(screen):
                 return START_GAME
             if event.type == KEYDOWN and event.key == K_q:
                 return QUIT_GAME
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
         
-def initial_game_settings():
-    FPSCLOCK = pygame.time.Clock()
-    DISPLAYSURF = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-    pygame.display.set_caption('Connect Four')
