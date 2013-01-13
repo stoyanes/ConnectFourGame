@@ -84,41 +84,24 @@ def draw_board(board, extra_pars=None):
             rect.topleft = (X_DISTANCE + (x * SPACE_SIZE), Y_DISTANCE + (y * SPACE_SIZE))
             DISPLAYSURF.blit(BOARDIMG, rect)
     
-    #DISPLAYSURF.blit(REDTOKENIMG, REDPILERECT) # red on the left
-    DISPLAYSURF.blit(BLACKTOKENIMG, BLACKPILERECT) # black on the right
-    
 def get_human_move(board):
-    draggingToken = False
-    tokenx, tokeny = None, None
+    coord_x, coord_y = None, None
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-            #elif event.type == MOUSEBUTTONDOWN and not draggingToken and REDPILERECT.collidepoint(event.pos):
-            elif event.type == MOUSEBUTTONDOWN and not draggingToken:
-                draggingToken = True
-                tokenx, tokeny = event.pos
-            elif event.type == MOUSEMOTION and draggingToken:
-                tokenx, tokeny = event.pos
-            elif event.type == MOUSEBUTTONUP and draggingToken:
-                # let go of the token being dragged
-                if tokeny < Y_DISTANCE and tokenx > X_DISTANCE and tokenx < WINDOW_WIDTH - X_DISTANCE:
-                    # let go at the top of the screen.
-                    column = int((tokenx - X_DISTANCE) / SPACE_SIZE)
-                    if is_valid_move(board, column):
-                        animate_dropping_token(board, column, RED)
-                        board[column][get_lowest_empty_space(board, column)] = RED
-                        draw_board(board)
-                        pygame.display.update()
-                        return
-                tokenx, tokeny = None, None
-                draggingToken = False
-        #TODO in a production if works without this, to be DELETED!!!
-        #if tokenx != None and tokeny != None:
-            #draw_board(board, {'x':tokenx - int(SPACE_SIZE / 2), 'y':tokeny - int(SPACE_SIZE / 2), 'color':RED})
-        #else:
-            #draw_board(board)
+            elif event.type == MOUSEBUTTONDOWN:
+                coord_x, coord_y = event.pos
+            elif event.type == MOUSEBUTTONUP:
+                column = int((coord_x - X_DISTANCE) / SPACE_SIZE)
+                if is_valid_move(board, column):
+                    animate_dropping_token(board, column, RED)
+                    board[column][get_lowest_empty_space(board, column)] = RED
+                    draw_board(board)
+                    pygame.display.update()
+                    return
+                coord_x, coord_y = None, None
         draw_board(board)
         pygame.display.update()
         FPSCLOCK.tick()
@@ -194,14 +177,6 @@ def animate_computer_moving(board, column):
     x = BLACKPILERECT.left
     y = BLACKPILERECT.top
     speed = 1.0
-    # moving the black tile up
-    #while y > (Y_DISTANCE - SPACE_SIZE):
-    #    y -= int(speed)
-    #    speed += 0.5
-    #    draw_board(board, {'x':x, 'y':y, 'color':BLACK})
-    #    pygame.display.update()
-    #    FPSCLOCK.tick()
-    # moving the black tile over
     y = Y_DISTANCE - SPACE_SIZE
     speed = 1.0
     while x > (X_DISTANCE + column * SPACE_SIZE):
