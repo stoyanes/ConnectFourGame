@@ -9,7 +9,7 @@ from pygame.locals import *
 def main():
     global DISPLAYSURF, REDPILERECT, BLACKPILERECT, REDTOKENIMG
     global BLACKTOKENIMG, BOARDIMG, ARROWIMG, ARROWRECT, HUMANWINNERIMG
-    global COMPUTERWINNERIMG, WINNERRECT, TIEWINNERIMG
+    global COMPUTERWINNERIMG, WINNERRECT, TIEWINNERIMG, background_img
     pygame.init()
     DISPLAYSURF = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption('Connect Four')
@@ -21,7 +21,7 @@ def main():
     BLACKTOKENIMG = pygame.transform.smoothscale(BLACKTOKENIMG, (SPACE_SIZE, SPACE_SIZE))
     BOARDIMG = pygame.image.load('images/board.png')
     BOARDIMG = pygame.transform.smoothscale(BOARDIMG, (SPACE_SIZE, SPACE_SIZE))
-    
+    background_img = pygame.image.load('images/background.png')
 
     
     # TODO loading winner images
@@ -66,8 +66,8 @@ def run():
         sys.exit()
        
 def draw_board(board, extra_pars=None):
-    DISPLAYSURF.fill(BGCOLOR)
-    
+    #DISPLAYSURF.fill(BGCOLOR)
+    DISPLAYSURF.blit(background_img, (0, 0))
     rect = pygame.Rect(0, 0, SPACE_SIZE, SPACE_SIZE)
     for x in range(BOARD_WIDTH):
         for y in range(BOARD_HEIGHT):
