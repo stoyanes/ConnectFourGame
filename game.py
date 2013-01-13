@@ -35,6 +35,13 @@ def main():
 
 def run():
     #turn = get_random_player()
+    draw_welcome_mess(DISPLAYSURF)
+    user_option = get_start_option(DISPLAYSURF)
+    
+    if user_option == QUIT_GAME:
+        pygame.quit()
+        sys.exit()
+    
     turn = HUMAN
     main_board = new_board()
     

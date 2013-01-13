@@ -1,7 +1,7 @@
 BOARD_WIDTH = 10
 BOARD_HEIGHT = 10
 
-DIFFICULTY = 3
+DIFFICULTY = 2
 
 SPACE_SIZE = 50
 
@@ -25,3 +25,6 @@ BLACK = 'black'
 EMPTY = None
 HUMAN = 'human'
 COMPUTER = 'computer'
+
+START_GAME = 1
+QUIT_GAME = 2

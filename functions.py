@@ -61,6 +61,23 @@ def make_move(board, player, column):
     if low != -1:
         board[column][low] = player
     
+def draw_welcome_mess(screen):
+        image = pygame.image.load('images/connect-four.png')
+        screen.blit(image, (0, 0))
+        pygame.display.flip()
+        pygame.time.wait(2000)
+        
+def get_start_option(screen):
+    image = pygame.image.load('images/connect-four-choice.png')
+    screen.blit(image, (0, 0))
+    pygame.display.flip()
+    while True:
+        for event in pygame.event.get():
+            if event.type == KEYDOWN and event.key == K_s:
+                return START_GAME
+            if event.type == KEYDOWN and event.key == K_q:
+                return QUIT_GAME
+        
 def initial_game_settings():
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
